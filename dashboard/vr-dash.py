@@ -1,4 +1,4 @@
-from tkinter import Tk, Label, Frame, Button, Text, Entry, Menu, Listbox, OptionMenu, StringVar
+from tkinter import Tk, Label, Frame, Button, Text, Entry
 from tkinter.constants import *
 
 import _thread
@@ -6,6 +6,10 @@ from serial import Serial
 
 
 class VrDash:
+    LOG_TYPE_INTERNAL = 'internal'
+    LOG_TYPE_TX = 'tx'
+    LOG_TYPE_RX = 'rx'
+
     board = Serial(timeout=.1)
 
     def __init__(self, master):
@@ -30,32 +34,42 @@ class VrDash:
         self.w_command = Entry(frame)
         self.w_command.grid(row=3, column=1, sticky=W + E)
 
-        self.w_start = Button(frame, text="Start", command=self.start)
+        self.w_start = Button(frame, text="Connect", command=self.start)
         self.w_start.grid(row=4, column=1, sticky=E, padx=55)
 
         self.w_send = Button(frame, text="Send", command=self.send)
         self.w_send.grid(row=4, column=1, sticky=E, padx=15)
 
-    def init_board(self):
+        self.w_log.tag_config(self.LOG_TYPE_INTERNAL, foreground='blue')
+        self.w_log.tag_config(self.LOG_TYPE_RX, foreground='green')
+        self.w_log.tag_config(self.LOG_TYPE_TX, foreground='red')
+
+    def connect(self):
         self.board.baudrate = self.w_baudrate.get()
         self.board.port = self.w_port.get()
         if not self.board.is_open:
             self.board.open()
+            self.log("Connected", self.LOG_TYPE_INTERNAL)
 
     def send(self):
         cmd = self.w_command.get()
         self.board.write(cmd.encode('utf-8'))
-        self.w_log.insert(END, cmd)
+        self.log(cmd, self.LOG_TYPE_TX)
 
     def watch_serial(self):
         while True:
             data = self.board.readline()
             if data:
-                self.w_log.insert(END, data.decode('utf-8'))
+                self.log(data.decode('utf-8'), self.LOG_TYPE_RX)
 
     def start(self):
-        self.init_board()
+        self.connect()
         _thread.start_new(self.watch_serial, ())
+
+    def log(self, msg, rec_type=LOG_TYPE_INTERNAL):
+        if not msg.endswith("\r\n"):
+            msg += "\r\n"
+        self.w_log.insert(INSERT, msg, rec_type)
 
 
 root = Tk()
