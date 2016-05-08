@@ -31,7 +31,7 @@ class VrDash:
         self.w_command.grid(row=3, column=1, sticky=W + E)
 
         self.w_start = Button(frame, text="Start", command=self.start)
-        self.w_start.grid(row=4, column=1, sticky=W, padx=15)
+        self.w_start.grid(row=4, column=1, sticky=E, padx=55)
 
         self.w_send = Button(frame, text="Send", command=self.send)
         self.w_send.grid(row=4, column=1, sticky=E, padx=15)
@@ -44,14 +44,14 @@ class VrDash:
 
     def send(self):
         cmd = self.w_command.get()
-        self.w_log.insert(END, cmd)
         self.board.write(cmd.encode('utf-8'))
+        self.w_log.insert(END, cmd)
 
     def watch_serial(self):
         while True:
             data = self.board.readline()
             if data:
-                self.w_log.insert(END, data)
+                self.w_log.insert(END, data.decode('utf-8'))
 
     def start(self):
         self.init_board()
