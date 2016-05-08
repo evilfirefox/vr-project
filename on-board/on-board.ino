@@ -12,16 +12,22 @@
 
 void setup() {
   configureLogger();
-
+  configureEngine();
 }
 
 void loop() {
 }
 
+void configureEngine() {
+  pinMode(PIN_ENGINE_SWITCH, OUTPUT);
+  pinMode(PIN_ENGINE_POSITIVE, OUTPUT);
+  pinMode(PIN_ENGINE_NEGATIVE, OUTPUT);
+}
+
 void controlEngine(uint8_t status, uint8_t direction) {
   digitalWrite(PIN_ENGINE_SWITCH, (status ? HIGH : LOW));
   digitalWrite(PIN_ENGINE_POSITIVE, direction);
-  digitalWrite(PIN_ENGINE_NEGATIVE, !direction); 
+  digitalWrite(PIN_ENGINE_NEGATIVE, !direction);
 }
 
 void configureLogger() {
