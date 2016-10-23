@@ -8,7 +8,7 @@
 #include "CommandHandler.h"
 #include "Motor.h"
 
-class MotorCommandHandler : protected CommandHandler {
+class MotorCommandHandler : public CommandHandler {
 protected:
   Motor* motor;
 

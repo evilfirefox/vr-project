@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <SPI.h>
 #include <RH_ASK.h>
-#include "Motor.h"
+#include "RadioCommandFactory.h"
 
 #define SERIAL_BAUDRATE 9600
 #define RADIO_BAUDRATE 2000
@@ -11,8 +11,9 @@
 
 RH_ASK radio = RH_ASK(RADIO_BAUDRATE, PIN_RX, PIN_TX);
 uint8_t buffer[BUFFER_SIZE];
-uint8_t size =  sizeof(buffer);
-Motor motor = Motor();
+uint8_t size = sizeof(buffer);
+
+RadioCommandFactory commandFactory = RadioCommandFactory();
 
 void setup() {
   Serial.begin(SERIAL_BAUDRATE);
@@ -23,23 +24,9 @@ void setup() {
 }
 
 void loop() {
-  /*if (radio.available()) {
+  if (radio.available()) {
     if (radio.recv(buffer, &size)) {
-      Serial.println("recieved:");
-      for (int i =0; i<size; i++){
-        Serial.write(buffer, size);
-      }
-      Serial.println();
-    } else {
-      Serial.println('recieve failed');
+      Command* command = commandFactory.createCommand(buffer, size);
     }
-  }*/
-  motor.start(MOTOR_DIRECTION_FWD);
-  delay(2000);
-  motor.stop();
-  delay(2000);
-  motor.start(MOTOR_DIRECTION_REV);
-  delay(2000);
-  motor.stop();
-  delay(2000);
+  }
 }
