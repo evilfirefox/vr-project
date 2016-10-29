@@ -6,7 +6,7 @@
 #include "RadioCommandFactory.h"
 
 #define SERIAL_BAUDRATE 9600
-#define RADIO_BAUDRATE 9600
+#define RADIO_BAUDRATE 2000
 #define PIN_RX 11
 #define PIN_TX 12
 #define BUFFER_SIZE 8
