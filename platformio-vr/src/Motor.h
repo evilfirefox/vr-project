@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <Arduino.h>
+#include "DigitalIOWrapper.h"
 
 #define PIN_MOTOR_SWITCH 2
 #define PIN_MOTOR_A 3
@@ -12,10 +13,12 @@
 #define MOTOR_DIRECTION_REV 1
 
 class Motor {
-  public:
-     Motor();
-     void start(uint8_t);
-     void stop();
+protected:
+  DigitalIOWrapper* digitalIO;
+public:
+   Motor(DigitalIOWrapper*);
+   void start(uint8_t);
+   void stop();
 };
 
 #endif

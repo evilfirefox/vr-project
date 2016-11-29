@@ -18,6 +18,7 @@ public:
 
   uint8_t getCommandType();
   uint8_t* getData();
+  uint8_t getSize();
   Command* setCommandType(uint8_t);
   Command* setData(uint8_t*, uint8_t);
 };
